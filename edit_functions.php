@@ -10,21 +10,21 @@
 		 
  		$mysqli = new mysqli($GLOBALS["servername"], $GLOBALS["server_username"], $GLOBALS["server_password"], $GLOBALS["database"]); 
  		 
- 		$stmt = $mysqli->prepare("SELECT clothes, brand, size, color FROM faschion WHERE id=?");
+ 		$stmt = $mysqli->prepare("SELECT clothes, brand, size, color FROM fashion WHERE id=?");
 
 		$stmt->bind_param("i", $edit_id);
 		$stmt->bind_result($clothes, $brand, $size, $color);
 		$stmt->execute();
  		
- 		$fashion = new Stdclass(); 
+ 		$fashionn = new Stdclass(); 
  		 
  		//saime uhe rea andmeid 
  		if($stmt->fetch()){
 			//saan siin alles kasutada bind_result muutujaid
-			$fashion->clothes = $clothes;
-			$fashion->brand = $brand;
-			$fashion->size = $size;
-			$fashion->color = $color;
+			$fashionn->clothes = $clothes;
+			$fashionn->brand = $brand;
+			$fashionn->size = $size;
+			$fashionn->color = $color;
 			
 		}else{
 			header("Location: table.php");

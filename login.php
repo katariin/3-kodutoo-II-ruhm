@@ -62,7 +62,7 @@
   
  		} // login if end 
 
-    }
+    
      // ********************* 
      // ** LOO KASUTAJA ***** 
      // ********************* 
@@ -126,11 +126,11 @@
  				createUser($create_name, $create_lastname, $create_email, $password_hash, $create_age);
  				 
  			}
-  
+      
      } 
   
  	
-  
+  }
   
    function cleanInput($data) { 
    	$data = trim($data); 

@@ -24,8 +24,9 @@
  		//kusime andmebaasist andmed id jargi 
  		 
 		//saadan kaasa id 
- 		$fashion = getSingleClothes($_GET["edit"]); 
-	var_dump($fashion); 
+ 		$fashion_objekt = getSingleClothes($_GET["edit"]); 
+		
+	var_dump($fashion_objekt); 
  	} 
  	 
 	 
@@ -33,17 +34,7 @@
  	 
 	 
  ?> 
- <h2>Muuda autot</h2> 
-   <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post" > 
- 	<input type="hidden" name="id" value="<?=$_GET["edit"];?>" >  
-   	<label for="number_plate" >auto nr</label><br> 
- 	<input id="number_plate" name="number_plate" type="text" value="<?php echo $car_object->number_plate;?>" ><br><br> 
-   	<label for="color" >varv</label><br> 
- 	<input id="color" name="color" type="text" value="<?=$car_object->color;?>"><br><br> 
-   	 
- 	<input type="submit" name="update" value="Salvesta"> 
-   </form> 
-   
+
    
    			<h2>Muuda faschion</h2>
 	    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post" ><br>

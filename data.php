@@ -53,7 +53,7 @@
  			 
  			// functions.php failis kaivina funktsiooni 
  			// msq on message funktsioonist mis tagasi saadame 
- 			$$msg = createClothes($clothes, $brand, $size, $color);
+ 			$msg = createClothes($clothes, $brand, $size, $color);
 			
 			if($msg != ""){
 				//salvestamine

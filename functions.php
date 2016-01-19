@@ -15,8 +15,8 @@
 		// globals on muutuja kõigist php failidest mis on ühendatud
 		$mysqli = new mysqli($GLOBALS["servername"], $GLOBALS["server_username"], $GLOBALS["server_password"], $GLOBALS["database"]);
 
-		$stmt = $mysqli->prepare("INSERT INTO users (name, lastname, email, password, gender) VALUES (?, ?, ?, ?, ?)");
-					$stmt->bind_param("sssssi", $create_name, $create_lastname, $create_create_email, $create_password_hash, $create_age);
+		$stmt = $mysqli->prepare("INSERT INTO users (name, lastname, email, password, age) VALUES (?, ?, ?, ?, ?)");
+					$stmt->bind_param("ssssi", $create_name, $create_lastname, $create_create_email, $create_password_hash, $create_age);
 					$stmt->execute();
 					$stmt->close(); 
 					
@@ -58,7 +58,7 @@
 		// globals on muutuja kõigist php failidest mis on ühendatud
 		$mysqli = new mysqli($GLOBALS["servername"], $GLOBALS["server_username"], $GLOBALS["server_password"], $GLOBALS["database"]);
 		
-		$stmt = $mysqli->prepare("INSERT INTO fashion (user_id, clothes, brand, size, color) VALUES (?, ?, ?, ?, ?)");
+		$stmt = $mysqli->prepare("INSERT INTO fashion (clothes, brand, size, color) VALUES (?, ?, ?, ?)");
 		$stmt->bind_param("issis", $_SESSION["id_from_db"], $clothes, $brand, $size, $color);
 		
 		$message = "";
@@ -79,14 +79,9 @@
 	}
  	 
  	 
- ?> 
 
 
-<?php 
- 	 
- 	// functions.php 
- 	require_once("config.php"); 
- 	$database = "if15_jekavor"; 
+
  	  
 		 function getClothes() {
 			
