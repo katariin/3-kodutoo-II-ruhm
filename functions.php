@@ -1,61 +1,64 @@
-
-<?php 
- 	//koik AB'iga seonduv 
+ <?php 
+ 
  	 
-	// uhenduse loomiseks kasuta 
+ 	// uhenduse loomiseks kasuta 
  	require_once("config.php"); 
+	
  	$database = "if15_jekavor"; 
 	 
  	// paneme sessiooni kaima, saame kasutada $_SESSION muutujaid 
-	session_start(); 
+ 	session_start(); 
   
-	
-	
-		function createUser($create_name, $create_lastname, $create_email, $password_hash, $create_age){
-		// globals on muutuja kõigist php failidest mis on ühendatud
-		$mysqli = new mysqli($GLOBALS["servername"], $GLOBALS["server_username"], $GLOBALS["server_password"], $GLOBALS["database"]);
 
-		$stmt = $mysqli->prepare("INSERT INTO users (name, lastname, email, password, age) VALUES (?, ?, ?, ?, ?)");
-					$stmt->bind_param("ssssi", $create_name, $create_lastname, $create_create_email, $create_password_hash, $create_age);
-					$stmt->execute();
-					$stmt->close(); 
-					
-						$mysqli->close();	
-	}
+	
+	
+	
  	 
+ 	// lisame kasutaja ab'i 
+ 	function createUser($create_email, $password_hash, $firstname, $lastname){ 
+ 		$mysqli = new mysqli($GLOBALS["servername"], $GLOBALS["server_username"], $GLOBALS["server_password"], $GLOBALS["database"]); 
+ 		 
+		$stmt = $mysqli->prepare("INSERT INTO users_login (email, password, firstname, lastname) VALUES (?, ?, ?, ?)"); 
+ 		$stmt->bind_param("ssss", $create_email, $create_password_hash, $firstname, $lastname); 
+ 		$stmt->execute(); 
+ 		$stmt->close(); 
+ 		 
+ 		$mysqli->close();		 
+ 	} 
+ 	 
+	 
 	 
  	//logime sisse 
-
-	 	function loginUser($email, $password_hash){
-		
-		$mysqli = new mysqli($GLOBALS["servername"], $GLOBALS["server_username"], $GLOBALS["server_password"], $GLOBALS["database"]);
-		
-		$stmt = $mysqli->prepare("SELECT id, email FROM users WHERE email=? AND password=?");
-		$stmt->bind_param("ss", $email, $password_hash);
-		$stmt->bind_result($id_from_db, $email_from_db);
-		$stmt->execute();
-		if($stmt->fetch()){
-			echo "kasutaja id=".$id_from_db;
-			
-			$_SESSION["id_from_db"] = $id_from_db;
-			$_SESSION["user_email"] = $email_from_db;
-			
-			
-			header("Location: data.php");
-			
-			
-		}else{
-			echo "Wrong password or email!";
-		}
-		$stmt->close();
-		
-		$mysqli->close();
-	}
+	function loginUser($email, $password_hash){ 
+ 		 
+ 		$mysqli = new mysqli($GLOBALS["servername"], $GLOBALS["server_username"], $GLOBALS["server_password"], $GLOBALS["database"]); 
+ 		 
+ 		$stmt = $mysqli->prepare("SELECT id, email FROM users_login WHERE email=? AND password=?"); 
+	    $stmt->bind_param("ss", $email, $password_hash); 
+ 		$stmt->bind_result($id_from_db, $email_from_db); 
+		$stmt->execute(); 
+ 		if($stmt->fetch()){ 
+ 			echo "kasutaja id=".$id_from_db; 
+ 			 
+			$_SESSION["id_from_db"] = $id_from_db; 
+ 			$_SESSION["user_email"] = $email_from_db; 
+ 			 
+ 			//suunan kasutaja data.php lehele 
+			header("Location: data.php"); 
+ 			 
+ 			 
+		  }else{ 
+ 			echo "Wrong password or email!"; 
+		} 
+ 		$stmt->close(); 
+ 		 
+ 		$mysqli->close(); 
+    } 
 	 
  	 
- 	 
- 	function createFashion($clothes, $brand, $size, $color){
-		// globals on muutuja kõigist php failidest mis on ühendatud
+
+    	function createFashion($clothes, $brand, $size, $color){
+		// globals on muutuja kÑ…igist php failidest mis on ÑŒhendatud
 		$mysqli = new mysqli($GLOBALS["servername"], $GLOBALS["server_username"], $GLOBALS["server_password"], $GLOBALS["database"]);
 		
 		$stmt = $mysqli->prepare("INSERT INTO fashion (clothes, brand, size, color) VALUES (?, ?, ?, ?)");
@@ -64,11 +67,11 @@
 		$message = "";
 		
 		if($stmt->execute()){
-			// see on tõene siis kui sisestus ab'i õnnestus
+			// see on tÑ…ene siis kui sisestus ab'i Ñ…nnestus
 			$message = "Edukalt sisestatud andmebaasi";
 			
 		}else{
-			// execute on false, miski läks katki
+			// execute on false, miski lÐ´ks katki
 			echo $stmt->error;
 		}
 		
@@ -77,61 +80,132 @@
 		return $message;
 		
 	}
- 	 
- 	 
+	
+	
+	function getUserData(){
+		
+		$mysqli = new mysqli($GLOBALS["servername"], $GLOBALS["server_username"], $GLOBALS["server_password"], $GLOBALS["database"]);
+		
+		$stmt = $mysqli->prepare("SELECT id, email FROM users_login");
+		$stmt->bind_result($id, $user_email);
+		$stmt->execute();
+		
+	
+		$array = array();
 
-
-
- 	  
-		 function getClothes() {
+		while($stmt->fetch()){
 			
+			// loon objekti iga while tsukli kord
+			$fashion = new StdClass();
+			$fashion->id = $id;
+			$fashion->email = $user_email;
+			
+			// lisame selle massiivi
+			array_push($array, $fashion);
+
+			
+		}
+		
+		$stmt->close();
+		$mysqli->close();
+		
+		return $array;
+		
+		
+	}
+	
+	
+	/*
+		function getFashionData(){
+		
 			$mysqli = new mysqli($GLOBALS["servername"], $GLOBALS["server_username"], $GLOBALS["server_password"], $GLOBALS["database"]);
 			
-			$stmt = $mysqli->prepare("SELECT id, user_id, clothes, brand, size, color FROM fashion");
-			$stmt->bind_result($id, $user_id, $clothes, $brand, $size, $color);
+			$stmt = $mysqli->prepare("SELECT clothes, brand, size, color FROM fashion WHERE user_id = ?");
+			$stmt->bind_param("s", $_SESSION["user_email"]);
+			$stmt->bind_result($clothes, $brand, $size, $color);
 			$stmt->execute();
+			
+			// tuhi massiiv kus hoiame objekte (1 rida andmeid)
+			$array = array();
 
-			$array=array();
-			
-			
 			while($stmt->fetch()){
-				 // loon objekte
-				$mode= new StdClass();
-				$mode->id=$id;
-				$mode->user_id = $user_id;
-				$mode->clothes = $clothes;
-				$mode->brand = $brand;
-				$mode->size = $size;
-				$mode->color = $color;
 				
-				    // lisame selle massiivi
-					array_push($array, $mode);
+				// loon objekti iga while tsukli kord
+				$fashion = new StdClass();
+				$fashion->clothes = $clothes;
+				$fashion->brand = $brand;
+				$fashion->size = $size;
+				$fashion->color = $color;
 				
-			
-		    }
+				// lisame selle massiivi
+				array_push($array, $fashion);
+
+				
+			}
 			
 			$stmt->close();
 			$mysqli->close();
 			
 			return $array;
+	}
+	*/
+	
+	function getClothes(){
+		
+		$mysqli = new mysqli($GLOBALS["servername"], $GLOBALS["server_username"], $GLOBALS["server_password"], $GLOBALS["database"]);
+		
+		$stmt = $mysqli->prepare("SELECT id, user_id, clothes, brand, size, color FROM fashion");
+		$stmt->bind_result($id, $user_id, $clothes, $brand, $size, $color);
+		$stmt->execute();
+		
+		// tuhi massiiv kus hoiame objekte (1 rida andmeid)
+		$array = array();
+
+		while($stmt->fetch()){
+			
+			// loon objekti iga while tsukli kord
+			$fashionn = new StdClass();
+			$fashionn->id = $id;
+			$fashionn->user_id = $user_id;
+			$fashionn->clothes = $clothes;
+			$fashionn->brand = $brand;
+			$fashionn->size = $size;
+			$fashionn->color = $color;
+			
+			// lisame selle massiivi
+			array_push($array, $fashionn);
 			
 		}
 		
- 	 
-		function deleteClothes($id_to_be_deleted){
+		$stmt->close();
+		$mysqli->close();
+		
+		return $array;
+		
+		
+	}
+	
+	
+	function deleteClothes($id_to_be_deleted){
 		
 		$mysqli = new mysqli($GLOBALS["servername"], $GLOBALS["server_username"], $GLOBALS["server_password"], $GLOBALS["database"]);
+		
+		$stmt = $mysqli->prepare("UPDATE fashion SET deleted=NOW() WHERE id=?");
+		$stmt->bind_param("i", $id_to_be_deleted);
+		
+		if($stmt->execute()){
+			// sai edukalt kustutatud
+			header("Location: table.php");
 			
-			$stmt = $mysqli->prepare("UPDATE fashion SET deleted=NOW() WHERE id=?");
-			$stmt->bind_param("i", $id_to_be_deleted);
-			
-			if($stmt->execute()){
-				header("Location: table.php");
-				
-			}
-			
-            $stmt->close();
-		    $mysqli->close();
-	    }
-
- ?> 
+		}
+		
+		$stmt->close();
+		$mysqli->close();
+		
+	}
+	
+ 	 
+ 
+ 
+ 
+?>

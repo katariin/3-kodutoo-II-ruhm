@@ -1,6 +1,6 @@
+
 <?php 
- 	// siia lisame auto nr margite vormi 
- 	//laeme funktsiooni failis 
+
  	require_once("functions.php"); 
  	 
  	//kontrollin, kas kasutaja ei ole sisseloginud 
@@ -53,7 +53,7 @@
  			 
  			// functions.php failis kaivina funktsiooni 
  			// msq on message funktsioonist mis tagasi saadame 
- 			$msg = createClothes($clothes, $brand, $size, $color);
+ 			$msg = createFashion($clothes, $brand, $size, $color);
 			
 			if($msg != ""){
 				//salvestamine
@@ -99,3 +99,9 @@
   <input name="color" type="text" value="<?=$color; ?>"> <?=$color_error; ?><br><br>
   <input type="submit" name="create" value="save">
   </form>
+
+  
+  
+  
+  
+  <link rel="stylesheet" href="style.css" type="text/css" /> 

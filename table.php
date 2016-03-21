@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="style.css" type="text/css" /> 
 <?php 
  	 
 	// table.php 
@@ -6,7 +7,7 @@
 
  	if(isset($_POST["update"])){ 
  		 
- 		updateClothes($_POST["id"], $_POST["number_plate"], $_POST["color"]); 
+ 		updateClothes($_POST["id"], $_POST["clothes"],$_POST["brand"],$_POST["size"], $_POST["color"]); 
  		 
  	} 
  	 
@@ -37,12 +38,11 @@
 	<th>Color</th>
 	<th>X</th>
  	 
- 	<?php 
+<?php 
  	 
 
 		for($i = 0; $i < count($clothes_list); $i++){ 
  	
-
 			if(isset($_GET["edit"]) && $clothes_list[$i]->id == $_GET["edit"]){ 
 				echo "<tr>"; 
  					echo "<form action='table.php' method='post'>"; 

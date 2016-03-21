@@ -1,5 +1,4 @@
 
-
 <?php
 	$page_title = "AVALEHT";
 	$file_name = "home.php";
@@ -25,4 +24,6 @@ Tere tulemast meie veebilehele!! :)
 <?php require_once("login.php"); ?>
 
 <?php require_once("footer.php");?>
+
+
 

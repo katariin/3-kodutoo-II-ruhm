@@ -1,4 +1,3 @@
-
 <?php 
   
  	require_once("config.php"); 
@@ -30,7 +29,7 @@
 			header("Location: table.php");
 				
 		}
-		return $fashion;
+		return $fashionn;
 		
 		$stmt->close();
 		$mysqli->close();
@@ -41,7 +40,7 @@
 	 function updateClothes($id, $clothes, $brand, $size, $color){
 	   $mysqli = new mysqli($GLOBALS["servername"], $GLOBALS["server_username"], $GLOBALS["server_password"], $GLOBALS["database"]);
 	   $stmt = $mysqli->prepare("UPDATE fashion SET clothes=?, brand=?, size=?, color=? WHERE id=?");
-	   $stmt->bind_param("issis", $id, $clothes, $brand, $size, $color);
+	   $stmt->bind_param("ssisi", $clothes, $brand, $size, $color, $id);
 	   
 	    // kas 6nnestus salvestada
 	   
@@ -57,3 +56,6 @@
 	   }
  	 
  ?> 
+ 
+
+
