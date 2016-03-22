@@ -1,31 +1,29 @@
-<link rel="stylesheet" href="style.css" type="text/css" /> 
+
 <?php 
  	 
 	// table.php 
  	require_once("functions.php"); 
 	require_once("edit_functions.php"); 
+	//var_dump($_POST);
+	
+   if(($_SESSION["id_from_db"]) == $_POST["user_id"] || ($_SESSION["id_from_db"]) == $_GET["user_id"]){ 	
+	
+			if(isset($_POST["update"])){ 
+				 
+				updateClothes($_POST["id"], $_POST["clothes"], $_POST["brand"], $_POST["size"], $_POST["color"]); 
+				 
+			}
 
- 	if(isset($_POST["update"])){ 
- 		 
- 		updateClothes($_POST["id"], $_POST["clothes"],$_POST["brand"],$_POST["size"], $_POST["color"]); 
- 		 
+			if(isset($_GET["delete"])){ 
+			 
+				deleteClothes($_GET["delete"]); 
+				 
+			} 
+ 	 
  	} 
- 	 
-
- 	 
-	//kas kasutaja tahab kustutada 
- 	// kas aadressireal on ?delete=??!??!?! 
- 	if(isset($_GET["delete"])){ 
-	 
-		// saadan kaasa id, mida kustutada 
-		deleteClothes($_GET["delete"]); 
-		 
- 	} 
- 	 
- 	 
 	 
  	$clothes_list = getClothes(); 
- 	//var_dump($car_list); 
+
   
  ?> 
 <table border=1>
@@ -36,7 +34,8 @@
 	<th>Brand</th>
 	<th>Size</th>
 	<th>Color</th>
-	<th>X</th>
+	<th>Kustutama</th>
+	<th>Muutma</th>
  	 
 <?php 
  	 
@@ -48,7 +47,7 @@
  					echo "<form action='table.php' method='post'>"; 
 					echo "<td>".$clothes_list[$i]->id."</td>"; 
  						echo "<td>".$clothes_list[$i]->user_id."</td>"; 
- 						echo "<td><input name='clothes' value='".$clothes_list[$i]->clothes."'></td>"; 
+ 						echo "<td><input type='hidden' name='id' value='".$clothes_list[$i]->id."'><input type='hidden' name='user_id' value='".$clothes_list[$i]->user_id."'><input name='clothes' value='".$clothes_list[$i]->clothes."'></td>"; 
  						echo "<td><input name='brand' value='".$clothes_list[$i]->brand."'></td>";
                         echo "<td><input name='size' value='".$clothes_list[$i]->size."'></td>"; 
                         echo "<td><input name='color' value='".$clothes_list[$i]->color."'></td>"; 						
@@ -67,7 +66,7 @@
  				echo "<td>".$clothes_list[$i]->brand."</td>";
 				echo "<td>".$clothes_list[$i]->size."</td>"; 
 				echo "<td>".$clothes_list[$i]->color."</td>"; 				
- 				echo "<td><a href='?delete=".$clothes_list[$i]->id."'>X</a></td>"; 
+ 				echo "<td><a href='?delete=".$clothes_list[$i]->id."&user_id=".$clothes_list[$i]->user_id."'>X</a></td>"; 
  				echo "<td><a href='?edit=".$clothes_list[$i]->id."'>edit</a></td>"; 
  			 
  				echo "</tr>"; 
@@ -81,3 +80,9 @@
  
  
  </table> 
+ 
+ 
+ 
+ 
+ 
+ <link rel="stylesheet" href="style.css" type="text/css" /> 

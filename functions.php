@@ -6,7 +6,7 @@
 	
  	$database = "if15_jekavor"; 
 	 
- 	// paneme sessiooni kaima, saame kasutada $_SESSION muutujaid 
+
  	session_start(); 
   
 
@@ -19,7 +19,7 @@
  		$mysqli = new mysqli($GLOBALS["servername"], $GLOBALS["server_username"], $GLOBALS["server_password"], $GLOBALS["database"]); 
  		 
 		$stmt = $mysqli->prepare("INSERT INTO users_login (email, password, firstname, lastname) VALUES (?, ?, ?, ?)"); 
- 		$stmt->bind_param("ssss", $create_email, $create_password_hash, $firstname, $lastname); 
+ 		$stmt->bind_param("ssss", $create_email, $password_hash, $firstname, $lastname); 
  		$stmt->execute(); 
  		$stmt->close(); 
  		 
@@ -61,17 +61,17 @@
 		// globals on muutuja kхigist php failidest mis on ьhendatud
 		$mysqli = new mysqli($GLOBALS["servername"], $GLOBALS["server_username"], $GLOBALS["server_password"], $GLOBALS["database"]);
 		
-		$stmt = $mysqli->prepare("INSERT INTO fashion (clothes, brand, size, color) VALUES (?, ?, ?, ?)");
+		$stmt = $mysqli->prepare("INSERT INTO fashion (user_id, clothes, brand, size, color) VALUES (?, ?, ?, ?, ?)");
 		$stmt->bind_param("issis", $_SESSION["id_from_db"], $clothes, $brand, $size, $color);
 		
 		$message = "";
 		
 		if($stmt->execute()){
-			// see on tхene siis kui sisestus ab'i хnnestus
+	
 			$message = "Edukalt sisestatud andmebaasi";
 			
 		}else{
-			// execute on false, miski lдks katki
+
 			echo $stmt->error;
 		}
 		
@@ -80,6 +80,7 @@
 		return $message;
 		
 	}
+	
 	
 	
 	function getUserData(){
@@ -158,21 +159,19 @@
 		$stmt->bind_result($id, $user_id, $clothes, $brand, $size, $color);
 		$stmt->execute();
 		
-		// tuhi massiiv kus hoiame objekte (1 rida andmeid)
 		$array = array();
 
 		while($stmt->fetch()){
 			
-			// loon objekti iga while tsukli kord
 			$fashionn = new StdClass();
 			$fashionn->id = $id;
-			$fashionn->user_id = $user_id;
+			$fashionn->user_id =  $user_id;
 			$fashionn->clothes = $clothes;
 			$fashionn->brand = $brand;
 			$fashionn->size = $size;
 			$fashionn->color = $color;
 			
-			// lisame selle massiivi
+			// lisan selle massiivi
 			array_push($array, $fashionn);
 			
 		}
@@ -190,11 +189,11 @@
 		
 		$mysqli = new mysqli($GLOBALS["servername"], $GLOBALS["server_username"], $GLOBALS["server_password"], $GLOBALS["database"]);
 		
-		$stmt = $mysqli->prepare("UPDATE fashion SET deleted=NOW() WHERE id=?");
+		$stmt = $mysqli->prepare("DELETE from fashion WHERE id=?");
 		$stmt->bind_param("i", $id_to_be_deleted);
 		
 		if($stmt->execute()){
-			// sai edukalt kustutatud
+			
 			header("Location: table.php");
 			
 		}

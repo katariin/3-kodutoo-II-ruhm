@@ -1,8 +1,7 @@
 <?php
 
     require_once("functions.php"); 
- 	 
- 	//kontrollin, kas kasutaja on sisseloginud 
+ 	  
  	if(isset($_SESSION["id_from_db"])){ 
  		// suunan data lehele 
  		header("Location: data.php"); 
@@ -145,3 +144,13 @@
 
 <body>
 <html>
+
+
+
+
+
+
+
+
+
+ <link rel="stylesheet" href="style.css" type="text/css" /> 

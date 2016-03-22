@@ -1,6 +1,7 @@
 
 <?php 
-
+    
+	require_once("menu.php");
  	require_once("functions.php"); 
  	 
  	//kontrollin, kas kasutaja ei ole sisseloginud 

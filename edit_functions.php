@@ -12,7 +12,7 @@
  		$stmt = $mysqli->prepare("SELECT clothes, brand, size, color FROM fashion WHERE id=?");
 
 		$stmt->bind_param("i", $edit_id);
-		$stmt->bind_result($clothes, $brand, $size, $color);
+		$stmt->bind_result($id, $clothes, $brand, $size, $color);
 		$stmt->execute();
  		
  		$fashionn = new Stdclass(); 
@@ -41,15 +41,12 @@
 	   $mysqli = new mysqli($GLOBALS["servername"], $GLOBALS["server_username"], $GLOBALS["server_password"], $GLOBALS["database"]);
 	   $stmt = $mysqli->prepare("UPDATE fashion SET clothes=?, brand=?, size=?, color=? WHERE id=?");
 	   $stmt->bind_param("ssisi", $clothes, $brand, $size, $color, $id);
-	   
-	    // kas 6nnestus salvestada
-	   
-	    if($stmt->execute()) {
-		   // 6nnestus
-		   echo "jah";
-		  
-	    }
-	   
+
+	    $stmt->execute();
+ 
+          // $_SESSION["user_id_from_db"] = $id;
+		
+   
 	   $stmt->close();
 		$mysqli->close();
 	   
